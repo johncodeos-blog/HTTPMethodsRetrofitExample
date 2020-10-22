@@ -16,11 +16,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.File
 
@@ -51,9 +47,12 @@ class MainActivity : AppCompatActivity() {
 
         // formData()
 
+
     }
 
+
     private fun rawJSON() {
+
         // Create Retrofit
         val retrofit = Retrofit.Builder()
             .baseUrl("http://dummy.restapiexample.com")
@@ -75,40 +74,31 @@ class MainActivity : AppCompatActivity() {
         val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
         CoroutineScope(Dispatchers.IO).launch {
-            // Do the POST request and get a call
-            val call = service.createEmployee(requestBody)
+            // Do the POST request a response
+            val response = service.createEmployee(requestBody)
 
             withContext(Dispatchers.Main) {
-                // We're using .enqueue to get asynchronous the response
-                call.enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
-                        // Note: An HTTP response may still indicate an application-level failure such as a 404 or 500. Call 'response.isSuccessful' to determine if the response indicates success.
-                        if (response.isSuccessful) {
-                            // Convert raw JSON to pretty JSON using GSON library
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val prettyJson = gson.toJson(
-                                JsonParser.parseString(
-                                    response.body()?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
-                                )
-                            )
-                            Log.d("Pretty Printed JSON :", prettyJson)
+                if (response.isSuccessful) {
 
-                            val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-                            intent.putExtra("json_results", prettyJson)
-                            this@MainActivity.startActivity(intent)
-                        } else {
-                            Log.e("RETROFIT_ERROR", response.code().toString())
-                        }
-                    }
+                    // Convert raw JSON to pretty JSON using GSON library
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val prettyJson = gson.toJson(
+                        JsonParser.parseString(
+                            response.body()
+                                ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
+                        )
+                    )
+                    Log.d("Pretty Printed JSON :", prettyJson)
 
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e("RETROFIT_ERROR", t.message ?: "")
-                    }
+                    val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+                    intent.putExtra("json_results", prettyJson)
+                    this@MainActivity.startActivity(intent)
 
-                })
+                } else {
+
+                    Log.e("RETROFIT_ERROR", response.code().toString())
+
+                }
             }
         }
     }
@@ -125,7 +115,6 @@ class MainActivity : AppCompatActivity() {
 
         // List of all MIME Types you can upload: https://www.freeformatter.com/mime-types-list.html
 
-
         // Get file from assets folder
         val file = getFileFromAssets(this, "lorem_ipsum.txt")
 
@@ -135,38 +124,32 @@ class MainActivity : AppCompatActivity() {
             (file).asRequestBody("text/plain".toMediaTypeOrNull())
 
         CoroutineScope(Dispatchers.IO).launch {
-            // Do the POST request and get a call
-            val call = service.uploadEmployeeData(fields)
+
+            // Do the POST request a response
+            val response = service.uploadEmployeeData(fields)
+
             withContext(Dispatchers.Main) {
-                // We're using .enqueue to get asynchronous the response
-                call.enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
-                        // Note: An HTTP response may still indicate an application-level failure such as a 404 or 500. Call 'response.isSuccessful' to determine if the response indicates success.
-                        if (response.isSuccessful) {
-                            // Convert raw JSON to pretty JSON using GSON library
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val prettyJson = gson.toJson(
-                                JsonParser.parseString(
-                                    response.body()?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
-                                )
-                            )
-                            Log.d("Pretty Printed JSON :", prettyJson)
+                if (response.isSuccessful) {
 
-                            val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-                            intent.putExtra("json_results", prettyJson)
-                            this@MainActivity.startActivity(intent)
-                        } else {
-                            Log.e("RETROFIT_ERROR", response.code().toString())
-                        }
-                    }
+                    // Convert raw JSON to pretty JSON using GSON library
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val prettyJson = gson.toJson(
+                        JsonParser.parseString(
+                            response.body()
+                                ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
+                        )
+                    )
+                    Log.d("Pretty Printed JSON :", prettyJson)
 
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e("RETROFIT_ERROR", t.message ?: "")
-                    }
-                })
+                    val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+                    intent.putExtra("json_results", prettyJson)
+                    this@MainActivity.startActivity(intent)
+
+                } else {
+
+                    Log.e("RETROFIT_ERROR", response.code().toString())
+
+                }
             }
         }
     }
@@ -187,39 +170,32 @@ class MainActivity : AppCompatActivity() {
         params["age"] = "45"
 
         CoroutineScope(Dispatchers.IO).launch {
-            // Do the POST request and get a call
-            val call = service.createEmployee(params)
+
+            // Do the POST request and get a response
+            val response = service.createEmployee(params)
+
             withContext(Dispatchers.Main) {
-                // We're using .enqueue to get asynchronous the response
-                call.enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
-                        // Note: An HTTP response may still indicate an application-level failure such as a 404 or 500. Call 'response.isSuccessful' to determine if the response indicates success.
-                        if (response.isSuccessful) {
-                            // Convert raw JSON to pretty JSON using GSON library
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val prettyJson = gson.toJson(
-                                JsonParser.parseString(
-                                    response.body()?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
-                                )
-                            )
-                            Log.d("Pretty Printed JSON :", prettyJson)
+                if (response.isSuccessful) {
 
-                            val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-                            intent.putExtra("json_results", prettyJson)
-                            this@MainActivity.startActivity(intent)
-                        } else {
-                            Log.e("RETROFIT_ERROR", response.code().toString())
-                        }
-                    }
+                    // Convert raw JSON to pretty JSON using GSON library
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val prettyJson = gson.toJson(
+                        JsonParser.parseString(
+                            response.body()
+                                ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
+                        )
+                    )
+                    Log.d("Pretty Printed JSON :", prettyJson)
 
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e("RETROFIT_ERROR", t.message ?: "")
-                    }
+                    val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+                    intent.putExtra("json_results", prettyJson)
+                    this@MainActivity.startActivity(intent)
 
-                })
+                } else {
+
+                    Log.e("RETROFIT_ERROR", response.code().toString())
+
+                }
             }
         }
     }
@@ -237,39 +213,35 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             // Do the GET request and get a call
             /*
-             * For @Query: You need to replace the following line with val call = service.getEmployees(2)
-             * For @Path: You need to replace the following line with val call = service.getEmployee(53)
+             * For @Query: You need to replace the following line with val response = service.getEmployees(2)
+             * For @Path: You need to replace the following line with val response = service.getEmployee(53)
              */
-            val call = service.getEmployees()
+
+            // Do the GET request and get a response
+            val response = service.getEmployees()
+
             withContext(Dispatchers.Main) {
-                // We're using .enqueue to get asynchronous the response
-                call.enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(
-                        call: Call<ResponseBody>, response: Response<ResponseBody>
-                    ) {
-                        // Note: An HTTP response may still indicate an application-level failure such as a 404 or 500. Call 'response.isSuccessful' to determine if the response indicates success.
-                        if (response.isSuccessful) {
-                            // Convert raw JSON to pretty JSON using GSON library
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val prettyJson = gson.toJson(
-                                JsonParser.parseString(
-                                    response.body()?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
-                                )
-                            )
-                            Log.d("Pretty Printed JSON :", prettyJson)
+                if (response.isSuccessful) {
 
-                            val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-                            intent.putExtra("json_results", prettyJson)
-                            this@MainActivity.startActivity(intent)
-                        } else {
-                            Log.e("RETROFIT_ERROR", response.code().toString())
-                        }
-                    }
+                    // Convert raw JSON to pretty JSON using GSON library
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val prettyJson = gson.toJson(
+                        JsonParser.parseString(
+                            response.body()
+                                ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
+                        )
+                    )
+                    Log.d("Pretty Printed JSON :", prettyJson)
 
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e("RETROFIT_ERROR", t.message ?: "")
-                    }
-                })
+                    val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+                    intent.putExtra("json_results", prettyJson)
+                    this@MainActivity.startActivity(intent)
+
+                } else {
+
+                    Log.e("RETROFIT_ERROR", response.code().toString())
+
+                }
             }
         }
     }
@@ -296,40 +268,32 @@ class MainActivity : AppCompatActivity() {
         val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
         CoroutineScope(Dispatchers.IO).launch {
-            // Do the PUT request and get a call
-            val call = service.updateEmployee(requestBody)
+
+            // Do the PUT request and get a response
+            val response = service.updateEmployee(requestBody)
 
             withContext(Dispatchers.Main) {
-                // We're using .enqueue to get asynchronous the response
-                call.enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
-                        // Note: An HTTP response may still indicate an application-level failure such as a 404 or 500. Call 'response.isSuccessful' to determine if the response indicates success.
-                        if (response.isSuccessful) {
-                            // Convert raw JSON to pretty JSON using GSON library
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val prettyJson = gson.toJson(
-                                JsonParser.parseString(
-                                    response.body()?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
-                                )
-                            )
-                            Log.d("Pretty Printed JSON :", prettyJson)
+                if (response.isSuccessful) {
 
-                            val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-                            intent.putExtra("json_results", prettyJson)
-                            this@MainActivity.startActivity(intent)
-                        } else {
-                            Log.e("RETROFIT_ERROR", response.code().toString())
-                        }
-                    }
+                    // Convert raw JSON to pretty JSON using GSON library
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val prettyJson = gson.toJson(
+                        JsonParser.parseString(
+                            response.body()
+                                ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
+                        )
+                    )
+                    Log.d("Pretty Printed JSON :", prettyJson)
 
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e("RETROFIT_ERROR", t.message ?: "")
-                    }
+                    val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+                    intent.putExtra("json_results", prettyJson)
+                    this@MainActivity.startActivity(intent)
 
-                })
+                } else {
+
+                    Log.e("RETROFIT_ERROR", response.code().toString())
+
+                }
             }
         }
     }
@@ -343,37 +307,34 @@ class MainActivity : AppCompatActivity() {
 
         // Create Service
         val service = retrofit.create(APIService::class.java)
+
         CoroutineScope(Dispatchers.IO).launch {
-            // Do the DELETE request
-            val call = service.deleteEmployee()
+
+            // Do the DELETE request and get a response
+
+            val response = service.deleteEmployee()
             withContext(Dispatchers.Main) {
-                call.enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
-                        if (response.isSuccessful) {
-                            // Convert raw JSON to pretty JSON using GSON library
-                            val gson = GsonBuilder().setPrettyPrinting().create()
-                            val prettyJson = gson.toJson(
-                                JsonParser.parseString(
-                                    response.body()?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
-                                )
-                            )
-                            Log.d("Pretty Printed JSON :", prettyJson)
+                if (response.isSuccessful) {
 
-                            val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-                            intent.putExtra("json_results", prettyJson)
-                            this@MainActivity.startActivity(intent)
-                        } else {
-                            Log.e("RETROFIT_ERROR", response.code().toString())
-                        }
-                    }
+                    // Convert raw JSON to pretty JSON using GSON library
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val prettyJson = gson.toJson(
+                        JsonParser.parseString(
+                            response.body()
+                                ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
+                        )
+                    )
+                    Log.d("Pretty Printed JSON :", prettyJson)
 
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.e("RETROFIT_ERROR", t.message ?: "")
-                    }
-                })
+                    val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+                    intent.putExtra("json_results", prettyJson)
+                    this@MainActivity.startActivity(intent)
+
+                } else {
+
+                    Log.e("RETROFIT_ERROR", response.code().toString())
+
+                }
             }
         }
     }

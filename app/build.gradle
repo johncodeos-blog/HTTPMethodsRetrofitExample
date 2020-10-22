@@ -46,9 +46,6 @@ dependencies {
     // Okhttp3 for the POST requests
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
-    // DocumentFile for POST requests (multipart/form-data)
-    implementation 'androidx.documentfile:documentfile:1.0.1'
-
     // Gson to convert raw JSON to pretty JSON
     implementation 'com.google.code.gson:gson:2.8.6'
 

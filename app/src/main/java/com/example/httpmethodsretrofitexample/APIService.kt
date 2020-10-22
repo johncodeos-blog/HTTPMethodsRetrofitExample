@@ -2,7 +2,7 @@ package com.example.httpmethodsretrofitexample
 
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 
@@ -15,19 +15,19 @@ interface APIService {
 
     // Raw JSON
     @POST("/api/v1/create")
-    fun createEmployee(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun createEmployee(@Body requestBody: RequestBody): Response<ResponseBody>
 
 
     // Form Data
     @Multipart
     @POST("/post")
-    fun uploadEmployeeData(@PartMap map: HashMap<String?, RequestBody?>): Call<ResponseBody>
+    suspend fun uploadEmployeeData(@PartMap map: HashMap<String?, RequestBody?>): Response<ResponseBody>
 
 
     // Encoded URL
     @FormUrlEncoded
     @POST("/post")
-    fun createEmployee(@FieldMap params: HashMap<String?, String?>): Call<ResponseBody>
+    suspend fun createEmployee(@FieldMap params: HashMap<String?, String?>): Response<ResponseBody>
 
 
     /*****************************************************************************************************************************************************/
@@ -38,17 +38,17 @@ interface APIService {
     */
 
     @GET("/api/v1/employees")
-    fun getEmployees(): Call<ResponseBody>
+    suspend fun getEmployees(): Response<ResponseBody>
 
 
     // Request using @Query (e.g https://reqres.in/api/users?page=2)
     @GET("/api/users")
-    fun getEmployees(@Query("page") page: String?): Call<ResponseBody>
+    suspend fun getEmployees(@Query("page") page: String?): Response<ResponseBody>
 
 
     // Request using @Path (e.g https://reqres.in/api/users/53 - This URL is just an example, it's not working)
     @GET("/api/users/{Id}")
-    fun getEmployee(@Path("Id") employeeId: String): Call<ResponseBody>
+    suspend fun getEmployee(@Path("Id") employeeId: String): Response<ResponseBody>
 
 
     /*****************************************************************************************************************************************************/
@@ -58,7 +58,7 @@ interface APIService {
     */
 
     @PUT("/api/users/2")
-    fun updateEmployee(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun updateEmployee(@Body requestBody: RequestBody): Response<ResponseBody>
 
 
     /*****************************************************************************************************************************************************/
@@ -69,7 +69,7 @@ interface APIService {
     */
 
     @DELETE("/typicode/demo/posts/1")
-    fun deleteEmployee(): Call<ResponseBody>
+    suspend fun deleteEmployee(): Response<ResponseBody>
 
 
     /*****************************************************************************************************************************************************/
