@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         val requestBody = jsonObjectString.toRequestBody("application/json".toMediaTypeOrNull())
 
         CoroutineScope(Dispatchers.IO).launch {
-            // Do the POST request a response
+            // Do the POST request and get response
             val response = service.createEmployee(requestBody)
 
             withContext(Dispatchers.Main) {
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            // Do the POST request a response
+            // Do the POST request and get response
             val response = service.uploadEmployeeData(fields)
 
             withContext(Dispatchers.Main) {
@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            // Do the POST request and get a response
+            // Do the POST request and get response
             val response = service.createEmployee(params)
 
             withContext(Dispatchers.Main) {
@@ -211,13 +211,12 @@ class MainActivity : AppCompatActivity() {
         val service = retrofit.create(APIService::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
-            // Do the GET request and get a call
             /*
              * For @Query: You need to replace the following line with val response = service.getEmployees(2)
              * For @Path: You need to replace the following line with val response = service.getEmployee(53)
              */
 
-            // Do the GET request and get a response
+            // Do the GET request and get response
             val response = service.getEmployees()
 
             withContext(Dispatchers.Main) {
@@ -269,7 +268,7 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            // Do the PUT request and get a response
+            // Do the PUT request and get response
             val response = service.updateEmployee(requestBody)
 
             withContext(Dispatchers.Main) {
@@ -310,7 +309,7 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            // Do the DELETE request and get a response
+            // Do the DELETE request and get response
 
             val response = service.deleteEmployee()
             withContext(Dispatchers.Main) {
