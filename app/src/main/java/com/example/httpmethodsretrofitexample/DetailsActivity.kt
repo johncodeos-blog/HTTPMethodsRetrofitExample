@@ -2,17 +2,20 @@ package com.example.httpmethodsretrofitexample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_details.*
+import com.example.httpmethodsretrofitexample.databinding.ActivityDetailsBinding
 
 class DetailsActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityDetailsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_details)
+        binding = ActivityDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val results = intent.getStringExtra("json_results")
 
-        json_results_textview.text = results
+        binding.jsonResultsTextview.text = results
 
     }
 }
